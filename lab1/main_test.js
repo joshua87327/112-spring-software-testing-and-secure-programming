@@ -31,7 +31,7 @@ test("Test MyClass's getStudentById", () => {
     assert.strictEqual(names.length, uniqueIds.length, "MyClass's getStudentById have duplicate ids");
 
     const invalidId = myClass.getStudentById(-1);
-    assert.strictEqual(id, -1, "MyClass's getStudentById shouldn't get invalid student id");
+    assert.strictEqual(invalidId, null, "MyClass's getStudentById shouldn't get invalid student id");
 });
 
 test("Test Student's setName", () => {
