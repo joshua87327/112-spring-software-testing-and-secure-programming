@@ -48,6 +48,8 @@ test("Test Student's setName", () => {
 });
 
 test("Test Student's getName", () => {
+    const student = new Student();
+    assert.strictEqual(student.getName(), '', "Student name should be empty string when it's undefined.");
     const myClass = new MyClass();
     names.forEach(name => {
         const student = new Student();
