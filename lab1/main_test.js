@@ -11,6 +11,9 @@ test("Test MyClass's addStudent", () => {
         myClass.addStudent(student);
     });
     assert.strictEqual(names.length, myClass.students.length, "MyClass's addStudent didn't add correct amount of students");
+    
+    const id = myClass.addStudent({});
+    assert.strictEqual(id, -1, "MyClass's addStudent shouldn't add non student id");
 });
 
 test("Test MyClass's getStudentById", () => {
@@ -26,6 +29,9 @@ test("Test MyClass's getStudentById", () => {
     let uniqueIds = [...new Set(ids)];
     assert.strictEqual(names.length, ids.length, "MyClass's getStudentById didn't add correct amount of ids");
     assert.strictEqual(names.length, uniqueIds.length, "MyClass's getStudentById have duplicate ids");
+
+    const invalidId = myClass.getStudentById(-1);
+    assert.strictEqual(id, -1, "MyClass's getStudentById shouldn't get invalid student id");
 });
 
 test("Test Student's setName", () => {
@@ -36,6 +42,8 @@ test("Test Student's setName", () => {
         const newStudentId = myClass.addStudent(student);
         const setName = myClass.getStudentById(newStudentId).name;
         assert.strictEqual(setName, name, "Student's setName didn't set it correctly");
+        student.setName(987); 
+        assert.notStrictEqual(student.name, 987, "Student's setName should not set number");
     });
 });
 
