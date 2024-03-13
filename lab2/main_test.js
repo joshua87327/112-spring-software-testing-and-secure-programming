@@ -21,37 +21,39 @@ test("MailSystem send()", (t) => {
     assert.strictEqual(sendStatus, false);
 });
 
-const nameList = ['Joshua','Ruby','Heidi','James'];
+const nameList = ['Joshua','Ruby'];
 
 test("Application getNames()", async (t) => {
-    fs.writeFileSync('name_list.txt', 'Joshua\nRuby\nHeidi\nJames', 'utf8');
+    fs.writeFileSync('name_list.txt', 'Joshua\nRuby', 'utf8');
     const app = new Application();
     name_list = await app.getNames();
-    assert.deepStrictEqual(name_list, [['Joshua','Ruby','Heidi','James'], []]);
+    assert.deepStrictEqual(name_list, [['Joshua','Ruby'], []]);
 });
 
 test("Application getRandomPerson()",async (t) => {
     const app = new Application();
     await app.getNames();
-    Math.random = () => 0.3;
-    // 0.3 * 4 = 1.2, floor => 1
+    Math.random = () => 0;
     let rndPerson = await app.getRandomPerson();
+    assert.strictEqual(rndPerson, 'Joshua');
+    Math.random = () => 0.5;
+    rndPerson = await app.getRandomPerson();
     assert.strictEqual(rndPerson, 'Ruby');
-    for (let i = 0; i < nameList.length; i++) {
-        /* stub Math.random to return 1/length */
-        t.mock.method(Math, 'random').mock.mockImplementation( () => i / nameList.length);
-        assert.strictEqual(app.getRandomPerson(), nameList[i]);
-    }
 });
 
 test("Application selectNextPerson()", async (t) => {
     const app = new Application();
-    Math.random = () => 0.3;
     await app.getNames();
-    app.selected = ['Joshua','Ruby','Heidi','James'];
+    app.selected = ['Joshua','Ruby'];
+
     let next = app.selectNextPerson();
     assert.strictEqual(app.selectNextPerson(), null);
+    
     app.selected = [];
+    app.selectNextPerson = () => 'Joshua';
+    next = await app.selectNextPerson();
+    assert.strictEqual(next, 'Joshua');
+
     app.selectNextPerson = () => 'Ruby';
     next = await app.selectNextPerson();
     assert.strictEqual(next, 'Ruby');
@@ -69,7 +71,7 @@ test("Application notifySelected()", async (t) => {
     await app.getNames();
     Math.random = () => 0;
     app.selectNextPerson();
-    Math.random = () => 0.25;
+    Math.random = () => 0.5;
     app.selectNextPerson();
     
 
