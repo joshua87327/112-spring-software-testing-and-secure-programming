@@ -78,4 +78,6 @@ test('Application', async (test) => {
     app3.notifySelected();
     assert.strictEqual(app3.mailSystem.send.mock.calls.length, 3);
     assert.strictEqual(app3.mailSystem.write.mock.calls.length, 3);
+    
+    fs.unlinkSync('name_list.txt');
 });
