@@ -21,6 +21,7 @@ test("MailSystem send()", (t) => {
     assert.strictEqual(sendStatus, false);
 });
 
+const nameList = ['Joshua','Ruby','Heidi','James'];
 
 test("Application getNames()", async (t) => {
     fs.writeFileSync('name_list.txt', 'Joshua\nRuby\nHeidi\nJames', 'utf8');
@@ -36,6 +37,11 @@ test("Application getRandomPerson()",async (t) => {
     // 0.3 * 4 = 1.2, floor => 1
     let rndPerson = await app.getRandomPerson();
     assert.strictEqual(rndPerson, 'Ruby');
+    for (let i = 0; i < nameList.length; i++) {
+        /* stub Math.random to return 1/length */
+        t.mock.method(Math, 'random').mock.mockImplementation( () => i / nameList.length);
+        assert.strictEqual(app.getRandomPerson(), nameList[i]);
+    }
 });
 
 test("Application selectNextPerson()", async (t) => {
