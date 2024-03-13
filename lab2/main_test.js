@@ -6,8 +6,9 @@ const fs = require('fs');
 test("MailSystem write()", () => {
     const ms = new MailSystem();
     myName = 'Joshua';
-    cxt = ms.write(myName);
-    assert.strictEqual(cxt, 'Congrats, ' + myName + '!');
+    assert.strictEqual(ms.write(myName), 'Congrats, ' + myName + '!');
+    assert.strictEqual(ms.write(true), 'Congrats, true!');
+    assert.strictEqual(ms.write(487), 'Congrats, 487!');
 });
 
 test("MailSystem send()", (t) => {
