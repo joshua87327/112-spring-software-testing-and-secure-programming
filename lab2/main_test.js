@@ -48,10 +48,12 @@ test("Application selectNextPerson()", async (t) => {
     Math.random = () => 0;
     let next = app.selectNextPerson();
     assert.strictEqual(next, 'Joshua');
+    assert.deepStrictEqual(app.selected, ['Joshua']);
 
     Math.random = () => 0.5;
     next = app.selectNextPerson();
     assert.strictEqual(next, 'Ruby');
+    assert.deepStrictEqual(app.selected, ['Joshua', 'Ruby']);
 
     assert.strictEqual(app.selectNextPerson(), null);
     
