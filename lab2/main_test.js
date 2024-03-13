@@ -26,8 +26,8 @@ const nameList = ['Joshua','Ruby'];
 test("Application getNames()", async (t) => {
     fs.writeFileSync('name_list.txt', 'Joshua\nRuby', 'utf8');
     const app = new Application();
-    name_list = await app.getNames();
-    assert.deepStrictEqual(name_list, [['Joshua','Ruby'], []]);
+    getNameList = await app.getNames();
+    assert.deepStrictEqual(getNameList, [nameList, []]);
 });
 
 test("Application getRandomPerson()",async (t) => {
@@ -44,19 +44,17 @@ test("Application getRandomPerson()",async (t) => {
 test("Application selectNextPerson()", async (t) => {
     const app = new Application();
     await app.getNames();
-    app.selected = ['Joshua','Ruby'];
-
-    let next = app.selectNextPerson();
-    assert.strictEqual(app.selectNextPerson(), null);
     
-    app.selected = [];
-    app.selectNextPerson = () => 'Joshua';
-    next = await app.selectNextPerson();
+    Math.random = () => 0;
+    let next = app.selectNextPerson();
     assert.strictEqual(next, 'Joshua');
 
-    app.selectNextPerson = () => 'Ruby';
-    next = await app.selectNextPerson();
+    Math.random = () => 0.5;
+    next = app.selectNextPerson();
     assert.strictEqual(next, 'Ruby');
+
+    assert.strictEqual(app.selectNextPerson(), null);
+    
 });
 
 test("Application notifySelected()", async (t) => {
