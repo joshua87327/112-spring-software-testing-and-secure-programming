@@ -31,57 +31,51 @@ test("Application getNames()", async (t) => {
     assert.deepStrictEqual(getNameList, [nameList, []]);
 });
 
-test("Application getRandomPerson()",async (t) => {
-    const app = new Application();
-    await app.getNames();
-    Math.random = () => 0;
-    let rndPerson = await app.getRandomPerson();
-    assert.strictEqual(rndPerson, 'Joshua');
-    Math.random = () => 0.6;
-    rndPerson = await app.getRandomPerson();
-    assert.strictEqual(rndPerson, 'Ruby');
-    Math.random = () => 0.9;
-    rndPerson = await app.getRandomPerson();
-    assert.strictEqual(rndPerson, 'Heidi');
-});
+test('Application', async (test) => {
 
-test("Application selectNextPerson()", async (t) => {
-    const app = new Application();
-    await app.getNames();
-    
-    Math.random = () => 0;
-    let next = app.selectNextPerson();
-    assert.strictEqual(next, 'Joshua');
-    assert.deepStrictEqual(app.selected, ['Joshua']);
+    //test getRandomPerson
+    const app1 = new Application();
+    app1.people = ['Joshua','Ruby','Heidi'];
 
-    Math.random = () => 0.6;
-    next = app.selectNextPerson();
-    assert.strictEqual(next, 'Ruby');
-    assert.deepStrictEqual(app.selected, ['Joshua','Ruby']);
+    test.mock.method(global.Math, 'random', () => 0);
+    assert.deepEqual(app1.getRandomPerson(), 'Joshua');
+    test.mock.method(global.Math, 'random', () => 0.6);
+    assert.deepEqual(app1.getRandomPerson(), 'Ruby');
+    test.mock.method(global.Math, 'random', () => 0.9);
+    assert.deepEqual(app1.getRandomPerson(), 'Heidi');
 
-    Math.random = () => 0.9;
-    next = app.selectNextPerson();
-    assert.strictEqual(next, 'Heidi');
-    assert.deepStrictEqual(app.selected, ['Joshua','Ruby','Heidi']);
+    //test selectNextPerson
+    const app2 = new Application();
+    app2.people = ['Joshua','Ruby','Heidi'];
+    app2.selected = ['Joshua'];
+    let count = 0;
+    test.mock.method(app2, 'getRandomPerson', () => {
+        if (count == 0) {
+            count++;
+            return 'Joshua';
+        } else if (count == 1) {
+            count++;
+            return 'Ruby';
+        }
+        else {
+            return 'Heidi';
+        }
+    })
+    assert.strictEqual(app2.selectNextPerson(), 'Ruby');
+    assert.deepStrictEqual(app2.selected, ['Joshua', 'Ruby']);
 
-    assert.strictEqual(app.selectNextPerson(), null);
-    
-});
+    assert.strictEqual(app2.selectNextPerson(), 'Heidi');
+    assert.deepStrictEqual(app2.selected, ['Joshua','Ruby','Heidi'])
 
-test("Application notifySelected()", async (t) => {
+    assert.strictEqual(app2.selectNextPerson(), null);
 
-    const app = new Application();
-    await app.getNames();
-    app.people = ['Joshua','Ruby','Heidi'];
-    app.selected = ['Joshua','Ruby','Heidi'];
-    app.mailSystem.send = test.mock.fn(app.mailSystem.send);
-    app.mailSystem.write = test.mock.fn(app.mailSystem.write);
-    
-
-    app.notifySelected();
-    
-    assert.strictEqual(app.mailSystem.send.mock.calls.length, 3);
-    assert.strictEqual(app.mailSystem.write.mock.calls.length, 3);
-
-    fs.unlinkSync('name_list.txt');
+    //test notifySelected  
+    const app3 = new Application();
+    app3.people = ['Joshua','Ruby','Heidi'];
+    app3.selected = ['Joshua','Ruby','Heidi'];
+    app3.mailSystem.send = test.mock.fn(app3.mailSystem.send);
+    app3.mailSystem.write = test.mock.fn(app3.mailSystem.write);
+    app3.notifySelected();
+    assert.strictEqual(app3.mailSystem.send.mock.calls.length, 3);
+    assert.strictEqual(app3.mailSystem.write.mock.calls.length, 3);
 });
