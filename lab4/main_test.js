@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
     // Launch the browser and open a new blank page
     // const browser = await puppeteer.launch({headless:false, executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'});
     const browser = await puppeteer.launch();
-
+  
     const page = await browser.newPage();
 
     // Navigate the page to a URL
