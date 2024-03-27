@@ -20,7 +20,7 @@ const puppeteer = require('puppeteer');
     // Type into search box
     const input = await page.waitForSelector('#docsearch-input', {visible: true});
     await input.type('chipi chipi chapa chapa');
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     //identify element with id
     const selector = await page.waitForSelector('#docsearch-item-5');
